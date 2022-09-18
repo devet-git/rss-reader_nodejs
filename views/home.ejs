@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSS READER</title>
+  <style>
+    :root {
+      --pri-color: #dedede;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0 20px;
+    }
+
+    form {
+      background-color: var(--pri-color);
+      padding: 10px 10px 15px;
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 10;
+    }
+
+    form input {
+      font-size: 17px;
+      padding: 7px 5px;
+      width: 85%;
+      outline: none;
+      border: none;
+      border-radius: 5px;
+    }
+
+    a {
+      color: green;
+      text-decoration: none;
+      display: block;
+    }
+
+    form button {
+      border: none;
+      border-radius: 5px;
+      padding: 7px;
+      width: 15%;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      background-color: #48aef7;
+    }
+
+    button:hover {
+      background-color: #73c4fe;
+    }
+
+    .postList {
+      background-color: var(--pri-color);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 20px;
+    }
+
+    .post {
+      width: 100%;
+      /* margin: 20px 0; */
+      padding: 25px 20px;
+      border-radius: 10px;
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 10px;
+      align-items: center;
+      background-color: azure;
+      transition: 0.25s;
+    }
+
+    .post:hover {
+      background-color: #d5ffff;
+    }
+
+    .post .title {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+
+    .post img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+    }
+
+    .post:hover img {
+      filter: blur(2px);
+    }
+  </style>
+</head>
+
+<body>
+  <form action="/" method="post">
+    <input type="text" name="rssUrl" id="rssUrl" placeholder="RSS URL" />
+    <button type="submit">Get data</button>
+  </form>
+  <div class="postList">
+    <% if(locals.data) { %>
+    <% data.forEach(elem => {%>
+    <div class="post">
+      <div>
+        <a href="<%= elem.link %>" target="_blank" class="title"><%= elem.title %></h1></a>
+        <% var pubDate = new Date(elem.isoDate) %>
+        <h3><%= pubDate.toLocaleDateString('en-GB') %></h3>
+        <h3>Creator: <%= elem.creator %></h3>
+        <p>Categories:
+          <% elem.categories && elem.categories.forEach(cate=>{ %>
+          <%= cate %>,
+          <% })%>
+        </p>
+      </div>
+      <div>
+        <%- elem.content %>
+      </div>
+    </div>
+
+    <% }) %>
+    <% } else {%>
+    <h1><%= locals.error ? error :"Please enter URL"%></h1>
+    <% } %>
+  </div>
+  <!-- <script>
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+  </script> -->
+</body>
+
+</html>
